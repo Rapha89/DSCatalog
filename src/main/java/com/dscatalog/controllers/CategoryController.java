@@ -4,6 +4,7 @@ import com.dscatalog.dto.CategoryDTO;
 import com.dscatalog.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -17,8 +18,8 @@ public class CategoryController {
     @Autowired
     private CategoryService service;
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> findAll(){
-        List<CategoryDTO> list = service.findAll();
+    public ResponseEntity<Page<CategoryDTO>> findAll(Pageable pageable){
+        Page<CategoryDTO> list = service.findAll(pageable);
         return ResponseEntity.ok().body(list);
     }
     @GetMapping(value = "/{id}")
