@@ -118,6 +118,7 @@ public class ProductControllerTests {
                 .content(jsonBody)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
+
         result.andExpect(status().isCreated());
         result.andExpect(jsonPath("$.id").exists());
         result.andExpect(jsonPath("$.name").exists());
@@ -125,23 +126,21 @@ public class ProductControllerTests {
     }
 
     @Test
-    public void deleteShouldReturnNoContentWhenIdExists() throws Exception{
-        ResultActions result = mockMvc.perform(delete("/products/{id}", existingId)
-                .accept(MediaType.APPLICATION_JSON));
-        result.andExpect(status().isNoContent());
+    public void deleteShouldDeleteWhenIdExists() throws Exception{
+        mockMvc.perform(delete("/products/{id}", existingId)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
     }
 
     @Test
     public void deleteShouldReturnNotFoundWhenIdDoesNotExists() throws Exception{
-        ResultActions result = mockMvc.perform(delete("/products/{id}", nonExistingId)
-                .accept(MediaType.APPLICATION_JSON));
-        result.andExpect(status().isNotFound());
+        mockMvc.perform(delete("/products/{id}", nonExistingId)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }
 
     @Test
     public void deleteShouldReturnBadRequestWhenIdExists() throws Exception{
-        ResultActions result = mockMvc.perform(delete("/products/{id}", dependentId)
-                .accept(MediaType.APPLICATION_JSON));
-        result.andExpect(status().isBadRequest());
+        mockMvc.perform(delete("/products/{id}", dependentId)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
     }
+
 }
