@@ -75,7 +75,7 @@ public class ProductServiceTests {
         Mockito.when(repository.getReferenceById(existingId)).thenReturn(product);
         Mockito.when(categoryRepository.getReferenceById(existingId)).thenReturn(category);
         doThrow(EntityNotFoundException.class).when(repository).getReferenceById(nonExistingId);
-        //doThrow(EntityNotFoundException.class).when(categoryRepository).getReferenceById(nonExistingId);
+        doThrow(EntityNotFoundException.class).when(categoryRepository).getReferenceById(nonExistingId);
     }
 
     @Test
@@ -114,7 +114,7 @@ public class ProductServiceTests {
     }
 
     @Test
-    public void findByIdShouldReturnResourceNotFoundExceptionWhenIdDoesNotExists(){
+    public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists(){
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             service.findById(nonExistingId);
         });
@@ -127,9 +127,10 @@ public class ProductServiceTests {
     }
 
     @Test
-    public void updateShouldReturnResourceNotFoundExceptionWhenIdDoesNotExists(){
+    public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists(){
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             service.update(nonExistingId, productDTO);
         });
     }
+
 }
