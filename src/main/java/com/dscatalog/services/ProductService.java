@@ -25,19 +25,23 @@ import java.util.stream.Collectors;
 public class ProductService {
     @Autowired
     private ProductRepository repository;
+
     @Autowired
     private CategoryRepository categoryRepository;
+
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAll(Pageable pageable){
         Page<Product> list = repository.findAll(pageable);
         return list.map(x -> new ProductDTO(x));
     }
+
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
         Optional<Product> obj = repository.findById(id);
         Product entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity Not Found"));
         return new ProductDTO(entity, entity.getCategories());
     }
+
     @Transactional
     public ProductDTO insert(ProductDTO dto) {
         Product entity = new Product();
@@ -45,6 +49,7 @@ public class ProductService {
         entity = repository.save(entity);
         return new ProductDTO(entity);
     }
+
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
         try {
@@ -56,6 +61,7 @@ public class ProductService {
             throw new ResourceNotFoundException("Id not found " + id);
         }
     }
+
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
         if (!repository.existsById(id)) {

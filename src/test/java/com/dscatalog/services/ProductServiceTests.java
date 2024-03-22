@@ -52,9 +52,9 @@ public class ProductServiceTests {
         nonExistingId = 2L;
         dependentId = 3L;
         product = Factory.createProduct();
-        page = new PageImpl<>(List.of(product));
         productDTO = Factory.createProductDTO();
         category = Factory.createCategory();
+        page = new PageImpl<>(List.of(product));
 
         Mockito.when(repository.findAll((Pageable)ArgumentMatchers.any())).thenReturn(page);
 

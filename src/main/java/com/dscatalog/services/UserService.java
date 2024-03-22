@@ -57,6 +57,7 @@ public class UserService implements UserDetailsService {
         entity = repository.save(entity);
         return new UserDTO(entity);
     }
+
     @Transactional
     public UserDTO update(Long id, UserUpdateDTO dto) {
         try {
