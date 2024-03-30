@@ -92,7 +92,7 @@ public class ProductService {
             entity.getCategories().add(category);
         }
     }
-
+    @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
     public Page<ProductDTO> findAllPaged(String name, String categoryId, Pageable pageable) {
         List<Long> categoryIds = List.of();
@@ -102,7 +102,7 @@ public class ProductService {
         Page<ProductProjection> page = repository.searchProducts(categoryIds, name, pageable);
         List<Long> productIds = page.map(ProductProjection::getId).toList();
         List<Product> entities = repository.searchProductsWithCategories(productIds);
-        entities = Utils.replace(page.getContent(), entities);
+        entities = (List<Product>) Utils.replace(page.getContent(), entities);
 
         List<ProductDTO> dtos = entities.stream().map(x -> new ProductDTO(x, x.getCategories())).toList();
 
