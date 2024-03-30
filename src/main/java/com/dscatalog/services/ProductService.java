@@ -4,6 +4,7 @@ import com.dscatalog.dto.CategoryDTO;
 import com.dscatalog.dto.ProductDTO;
 import com.dscatalog.entities.Category;
 import com.dscatalog.entities.Product;
+import com.dscatalog.util.Utils;
 import com.dscatalog.projections.ProductProjection;
 import com.dscatalog.repositories.CategoryRepository;
 import com.dscatalog.repositories.ProductRepository;
@@ -101,6 +102,8 @@ public class ProductService {
         Page<ProductProjection> page = repository.searchProducts(categoryIds, name, pageable);
         List<Long> productIds = page.map(ProductProjection::getId).toList();
         List<Product> entities = repository.searchProductsWithCategories(productIds);
+        entities = Utils.replace(page.getContent(), entities);
+
         List<ProductDTO> dtos = entities.stream().map(x -> new ProductDTO(x, x.getCategories())).toList();
 
         return new PageImpl<>(dtos, page.getPageable(), page.getTotalElements());
