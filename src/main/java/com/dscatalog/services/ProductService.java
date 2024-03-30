@@ -4,6 +4,7 @@ import com.dscatalog.dto.CategoryDTO;
 import com.dscatalog.dto.ProductDTO;
 import com.dscatalog.entities.Category;
 import com.dscatalog.entities.Product;
+import com.dscatalog.projections.ProductProjection;
 import com.dscatalog.repositories.CategoryRepository;
 import com.dscatalog.repositories.ProductRepository;
 import com.dscatalog.services.exceptions.DatabaseException;
@@ -12,14 +13,17 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ProductService {
@@ -88,4 +92,17 @@ public class ProductService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Page<ProductDTO> findAllPaged(String name, String categoryId, Pageable pageable) {
+        List<Long> categoryIds = List.of();
+        if(!"0".equals(categoryId)){
+            categoryIds = Stream.of(categoryId.split(",")).map(Long::parseLong).toList();
+        }
+        Page<ProductProjection> page = repository.searchProducts(categoryIds, name, pageable);
+        List<Long> productIds = page.map(ProductProjection::getId).toList();
+        List<Product> entities = repository.searchProductsWithCategories(productIds);
+        List<ProductDTO> dtos = entities.stream().map(x -> new ProductDTO(x, x.getCategories())).toList();
+
+        return new PageImpl<>(dtos, page.getPageable(), page.getTotalElements());
+    }
 }

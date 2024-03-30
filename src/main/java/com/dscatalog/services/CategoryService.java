@@ -22,24 +22,29 @@ import java.util.stream.Collectors;
 public class CategoryService {
     @Autowired
     private CategoryRepository repository;
+
     @Transactional(readOnly = true)
-    public Page<CategoryDTO> findAll(Pageable pageable){
-        Page<Category> list = repository.findAll(pageable);
-        return list.map(x -> new CategoryDTO(x));
+    public List<CategoryDTO> findAll(){
+        List<Category> list = repository.findAll();
+        return list.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
     }
+
     @Transactional(readOnly = true)
     public CategoryDTO findById(Long id) {
         Optional<Category> obj = repository.findById(id);
         Category entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity Not Found"));
         return new CategoryDTO(entity);
     }
+
     @Transactional
+
     public CategoryDTO insert(CategoryDTO dto) {
         Category entity = new Category();
         entity.setName(dto.getName());
         entity = repository.save(entity);
         return new CategoryDTO(entity);
     }
+
     @Transactional
     public CategoryDTO update(Long id, CategoryDTO dto) {
         try {
@@ -51,6 +56,7 @@ public class CategoryService {
             throw new ResourceNotFoundException("Id not found " + id);
         }
     }
+
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
         if (!repository.existsById(id)) {
