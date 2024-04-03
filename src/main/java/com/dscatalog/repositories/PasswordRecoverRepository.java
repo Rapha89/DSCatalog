@@ -14,5 +14,4 @@ public interface PasswordRecoverRepository extends JpaRepository<PasswordRecover
     @Query("SELECT obj FROM PasswordRecover obj WHERE obj.token = :token AND obj.expiration > :now")
     List<PasswordRecover> searchValidTokens(String token, Instant now);
 
-
 }

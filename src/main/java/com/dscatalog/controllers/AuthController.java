@@ -2,6 +2,7 @@ package com.dscatalog.controllers;
 
 
 import com.dscatalog.dto.EmailDTO;
+import com.dscatalog.dto.NewPasswordDTO;
 import com.dscatalog.services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,10 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping(value = "/new-password")
+    public ResponseEntity<Void> saveNewPassword(@Valid @RequestBody NewPasswordDTO body){
+        authService.saveNewPassword(body);
+        return ResponseEntity.noContent().build();
+    }
 
 }
