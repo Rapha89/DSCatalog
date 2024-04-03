@@ -1,8 +1,6 @@
 package com.dscatalog.util;
 
-import com.dscatalog.entities.Product;
 import com.dscatalog.projections.IdProjection;
-import com.dscatalog.projections.ProductProjection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
