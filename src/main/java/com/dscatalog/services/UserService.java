@@ -38,11 +38,21 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AuthService authService;
+
     @Transactional(readOnly = true)
     public Page<UserDTO> findAll(Pageable pageable){
         Page<User> list = repository.findAll(pageable);
         return list.map(x -> new UserDTO(x));
     }
+
+    @Transactional(readOnly = true)
+    public UserDTO findMe() {
+        User obj = authService.authenticated();
+        return new UserDTO(obj);
+    }
+
     @Transactional(readOnly = true)
     public UserDTO findById(Long id) {
         Optional<User> obj = repository.findById(id);
